@@ -1,17 +1,19 @@
 #include "CalcHeader.h"
 
 int Priority(char symbol) {
-    if ((symbol == '+') || (symbol == '-')) {
-        return 2;
-    }
-    if ((symbol == '/') || (symbol == '*')) {
-        return 3;
-    }
-    if (symbol == '(') {
-        return 1;
-    }
-    if (symbol == ')') {
-        return -1;
+    switch(symbol){
+        case '+':
+            return 2;
+        case '-':
+            return 2;
+        case '/':
+            return 3;
+        case '*':
+            return 3;
+        case '(':
+            return 1;
+        case ')':
+            return -1;
     }
     char *op = &symbol;
     if (atoi(op) != 0) {
@@ -117,37 +119,36 @@ int Calculation(Operand *operand_ptr, Stack *st_ptr) {
             pop(st_ptr);
             int a = atoi(pop(st_ptr));
             int b = atoi(pop(st_ptr));
-            if (operand_ptr->OperandString[i][0] == '*') {
-                int c = b * a;
-                char f[32];
-                snprintf(f, sizeof f, "%d", c);
-                push(f, st_ptr);
-            }
-            if (operand_ptr->OperandString[i][0] == '/') {
-                if (a == 0) {
-                    printf("division by zero");
-                    return 1;
-                }
-                int c = b / a;
-                char f[32];
-                snprintf(f, sizeof f, "%d", c);
-                push(f, st_ptr);
-
-            }
-            if (operand_ptr->OperandString[i][0] == '+') {
-                int c = b + a;
-                char f[32];
-                snprintf(f, sizeof f, "%d", c);
-                push(f, st_ptr);
-            }
-            if (operand_ptr->OperandString[i][0] == '-') {
-                int c = b - a;
-                char f[32];
-                snprintf(f, sizeof f, "%d", c);
-                push(f, st_ptr);
+            char operator = operand_ptr->OperandString[i][0];
+            int c;
+            char f[32];
+            switch(operator){
+                case '*':
+                    c = b * a;
+                    snprintf(f, sizeof f, "%d", c);
+                    push(f, st_ptr);
+                    break;
+                case '/':
+                    if (a == 0) {
+                        printf("division by zero");
+                        return 1;
+                    }
+                    c = b / a;
+                    snprintf(f, sizeof f, "%d", c);
+                    push(f, st_ptr);
+                    break;
+                case '+':
+                    c = b + a;
+                    snprintf(f, sizeof f, "%d", c);
+                    push(f, st_ptr);
+                    break;
+                case '-':
+                    c = b - a;
+                    snprintf(f, sizeof f, "%d", c);
+                    push(f, st_ptr);
+                    break;
             }
         }
-
     }
 
     while (is_empty(st_ptr) == 0) {
